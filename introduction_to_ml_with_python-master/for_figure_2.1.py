@@ -23,6 +23,7 @@ rewards=np.zeros(match_counts.shape)
 counts=[0 for i in range(2000)]
 for i in range(nB):
     q_estimation = np.zeros(10)
+    #accumulate_counts = np.zeros(10)
     q_true = np.random.randn(nA)
     best_action = np.argmax(q_true)
     for j in range(nP):
@@ -33,17 +34,28 @@ for i in range(nB):
         if selected_action == best_action:
             counts[i] += 1
             match_counts[i][j] = 1
+
         reward = np.random.randn()+q_true[selected_action]
         rewards[i][j]=reward
+        ###########
+        #  这种方式是后面的基于reward表示的的动作值函数
         q_estimation[selected_action]+=step_size*(reward-q_estimation[selected_action])
+        ##########
+        ##########
+        #  换一种基于累计reward和采用动作次数的表示方法，需要借助一个辅助量来计数，记为accumulate_counts
+        #accumulate_counts[selected_action] += 1
+        #q_estimation[selected_action]= ((accumulate_counts[selected_action]-1)*q_estimation[selected_action]+reward)/accumulate_counts[selected_action]
+        ##########
 
-rew=pd.DataFrame(np.mean(rewards,axis=0))
-rew.to_excel("./myrewords.xlsx")
-maco=pd.DataFrame(np.mean(match_counts,axis=0))
-maco.to_excel("./my_match_counts.xlsx")
-print("the averaged match counts is :",np.average(counts))
-plt.plot(match_counts.mean(axis=0))
-plt.ylim(0,1)
+
+#rew=pd.DataFrame(np.mean(rewards,axis=0))
+# rew.to_excel("./myrewords.xlsx")
+# maco=pd.DataFrame(np.mean(match_counts,axis=0))
+# maco.to_excel("./my_match_counts.xlsx")
+# print("the averaged match counts is :",np.average(counts))
+plt.plot(rewards.mean(axis=0))
+plt.ylim(0,2)
+plt.savefig("./stepreward.png")
 plt.show()
 #就这个代码总结一下自己的理解
 #首先，强化学习的过程需要一个policy，根据当前状态选取动作，这里采用的是
