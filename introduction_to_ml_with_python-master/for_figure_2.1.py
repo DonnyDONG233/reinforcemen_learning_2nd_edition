@@ -45,5 +45,12 @@ print("the averaged match counts is :",np.average(counts))
 plt.plot(match_counts.mean(axis=0))
 plt.ylim(0,1)
 plt.show()
+#就这个代码总结一下自己的理解
+#首先，强化学习的过程需要一个policy，根据当前状态选取动作，这里采用的是
+#epsilon策略，即以epsilon的概率去探索，实际的做法是产生（0,1）间的随机数
+#当结果小于epsilon时，在所有的可用动作集中随机选择动作；其次是值函数的更新
+#策略，这里用的是第一章里的定义q=q+step_size(r-q)的更新方式
+#然后要能根据策略选出的动作做出反应，这里就是更新值函数q_estimation，同时可以收集
+#其他的参量，最后定义一下与环境交互的次数以及最后实验次数即可。
 
 
